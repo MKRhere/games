@@ -66,9 +66,9 @@ for (const rank of Ranks) {
 	PACK.push({ rank, suit: Suits[3] });
 }
 
-function exhaustive(input: never): void {}
+function exhaustive(_: never): void {}
 
-function equal<O extends Input>(a: O, b: O) {
+function equal<O extends object>(a: O, b: O) {
 	for (const key of Object.keys(a)) if (a[key as keyof O] !== b[key as keyof O]) return false;
 	return true;
 }
@@ -142,20 +142,23 @@ async function ace(
 
 			pile.push({ index, player, card });
 
-			if (action.type === "play") {
+			// TS needs this, or doesn't understand exhaustive(action) below
+			const a = action;
+
+			if (a.type === "play") {
 				if (!high || rank(card) > rank(high.card)) high = { index, player, card };
 
 				continue;
 			}
 
-			if (action.type === "cut") {
+			if (a.type === "cut") {
 				if (!high) throw new Error("No cards in pile, cannot cut!");
 				high.player.hand.push(...pile.map(p => p.card));
 
 				break;
 			}
 
-			exhaustive(action);
+			exhaustive(a);
 		}
 
 		players = reorder(players, high!.index);
@@ -193,7 +196,7 @@ ace(
 			console.log(`\nPossible inputs:`);
 			console.log(
 				inputs
-					.filter(input => input.type === "play" || input.type === "cut")
+					.filter((input): input is Input.Play | Input.Cut => input.type === "play" || input.type === "cut")
 					.map((input, index) =>
 						colour(input.card)(`[${index}] ${input.type} / ${input.card.suit} ${input.card.rank}`),
 					)
@@ -207,7 +210,7 @@ ace(
 				continue;
 			}
 			const input = inputs[res]!;
-			console.log(player.name, "played", input.type, input.card.suit, input.card.rank);
+			console.log(player.name, "played", input);
 			console.log("\n===\n");
 			return input;
 		}
