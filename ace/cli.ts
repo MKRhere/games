@@ -39,7 +39,7 @@ const buildPrompt = (player: Player, inputs: string) =>
 		inputs,
 	].join("\n\n");
 
-const printInput = (player: Player, input: Input) => {
+const printInput = (player: Player, input: Input.Any) => {
 	if (input.type === "play") console.log(player.name, "played", coloured(input.card));
 	else if (input.type === "cut") console.log(player.name, "cut with", coloured(input.card));
 	else if (input.type === "offer") console.log(input.player.name, "offered their hand to", player.name);
@@ -49,7 +49,7 @@ const printInput = (player: Player, input: Input) => {
 	console.log("\n===\n");
 };
 
-const inputController = async (player: Player, inputs: Input[]) => {
+const inputController = async (player: Player, inputs: Input.Any[]) => {
 	while (true) {
 		const possibleInputs = inputs
 			.filter((input): input is Input.Play | Input.Cut => input.type === "play" || input.type === "cut")

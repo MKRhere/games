@@ -1,56 +1,11 @@
 import { split, reorder, shuffle, equal, exhaustive } from "../utils.js";
 import { French } from "../packs/mod.js";
+import * as Input from "./input.js";
+import * as Output from "./output.js";
+import { Player } from "./player.js";
 
+export { Input, Output, Player };
 export type Card = French.Card;
-
-export interface Player {
-	id: string;
-	name: string;
-	hand: Card[];
-}
-
-export namespace Input {
-	export interface Play {
-		type: "play";
-		card: Card;
-	}
-
-	export interface Cut {
-		type: "cut";
-		card: Card;
-	}
-
-	export interface Offer {
-		type: "offer";
-		player: Player;
-	}
-
-	export interface Accept {
-		type: "accept";
-		player: Player;
-	}
-}
-
-export type Input = Input.Play | Input.Cut | Input.Offer | Input.Accept;
-
-export namespace Output {
-	export interface Winners {
-		type: "winners";
-		players: Player[];
-	}
-
-	export interface Loser {
-		type: "loser";
-		player: Player;
-	}
-
-	export interface Invalid {
-		type: "invalid";
-		msg: string;
-	}
-}
-
-export type Output = Output.Winners | Output.Loser | Output.Invalid;
 
 interface PileItem {
 	index: number;
@@ -60,8 +15,8 @@ interface PileItem {
 
 export async function* AceGame(
 	players: Player[],
-	input: (player: Player, suggestions: Input[]) => Promise<Input>,
-): AsyncGenerator<Output> {
+	input: (player: Player, suggestions: Input.Any[]) => Promise<Input.Any>,
+): AsyncGenerator<Output.Any> {
 	const deck = shuffle(French.Pack);
 	split(deck, players.length).forEach((hand, i) => (players[i].hand = French.sort(hand)));
 
@@ -84,7 +39,7 @@ export async function* AceGame(
 			const player = players[index];
 			const hand = player.hand;
 			const playable = hand.filter(card => !suit || card.suit === suit);
-			const suggestions: Input[] = playable.length
+			const suggestions: Input.Any[] = playable.length
 				? playable.map(card => ({ type: "play", card }))
 				: hand.map(card => ({ type: "cut", card }));
 
