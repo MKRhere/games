@@ -18,3 +18,10 @@ export const swap = <T>(arr: T[], a: number, b: number) => {
 };
 
 export const reorder = <T>(arr: T[], start: number) => arr.slice(start).concat(arr.slice(0, start));
+
+export function exhaustive(_: never): void {}
+
+export function equal<O extends object>(a: O, b: O) {
+	for (const key of Object.keys(a)) if (a[key as keyof O] !== b[key as keyof O]) return false;
+	return true;
+}

@@ -1,11 +1,10 @@
 import { createInterface } from "readline/promises";
 import chalk from "chalk";
 
-import { Ace, Card, Input, Player } from "./game.js";
-import { French } from "../packs.js";
+import { AceGame, Card, Input, Player } from "./game.js";
 import { chunk, exhaustive } from "../utils.js";
 
-const colour = (card: Card) => (French.suitPos(card) % 2 ? chalk.red : chalk.white);
+const colour = (card: Card) => (card.suit.index % 2 ? chalk.red : chalk.white);
 
 const rl = createInterface(process.stdin, process.stdout);
 const prompt = rl.question.bind(rl);
@@ -24,7 +23,7 @@ const players = Array.from(
 	}),
 );
 
-const coloured = (card: Card) => colour(card)(`${card.suit} ${card.rank}`);
+const coloured = (card: Card) => colour(card)(`${card.suit.sym} ${card.rank.sym}`);
 
 const serialiseHand = (player: Player) =>
 	chunk(player.hand, 5)
@@ -77,7 +76,7 @@ const inputController = async (player: Player, inputs: Input[]) => {
 const join = (players: Player[]) => players.map(player => player.name).join(", ");
 const haveHas = (num: number) => (num > 1 ? "have" : "has");
 
-for await (const output of Ace(players, inputController)) {
+for await (const output of AceGame(players, inputController)) {
 	if (output.type === "invalid") console.log("Invalid:", output.msg);
 	else if (output.type === "winners") console.log(`${join(output.players)} ${haveHas(output.players.length)} won!`);
 	else if (output.type === "loser") console.log(`${output.player.name} has lost.`);
