@@ -37,7 +37,7 @@ const buildPrompt = (player: Player, inputs: string) =>
 		inputs,
 	].join("\n\n");
 
-const mapInput = (player: Player, input: Input.Any): string => {
+function mapInput(player: Player, input: Input.Any): string {
 	switch (input.type) {
 		case "play":
 			return player.name + " played " + coloured(input.card);
@@ -48,7 +48,7 @@ const mapInput = (player: Player, input: Input.Any): string => {
 		case "accept":
 			return player.name + " accepted " + `${input.player.name}'s offer`;
 	}
-};
+}
 
 function mapOutput(output: Output.Any): string {
 	switch (output.type) {
@@ -63,7 +63,7 @@ function mapOutput(output: Output.Any): string {
 
 let outputCache = "";
 
-const inputController = async (player: Player, inputs: Input.Any[]): Promise<Input.Any> => {
+async function inputController(player: Player, inputs: Input.Any[]): Promise<Input.Any> {
 	console.log(outputCache);
 	outputCache = "";
 
@@ -84,11 +84,11 @@ const inputController = async (player: Player, inputs: Input.Any[]): Promise<Inp
 
 		const input = inputs[res]!;
 
-		console.log("\n" + mapInput(player, input) + "\n\n===");
+		outputCache += "\n" + mapInput(player, input) + "\n\n===";
 
 		return input;
 	}
-};
+}
 
 const join = (players: Player[]) => players.map(player => player.name).join(", ");
 const haveHas = (num: number) => (num > 1 ? "have" : "has");
