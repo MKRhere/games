@@ -1,8 +1,8 @@
 import { createInterface } from "readline/promises";
 import chalk from "chalk";
 
-import { AceGame, Card, Input, Player } from "./game.js";
-import { chunk, exhaustive } from "../utils.js";
+import { AceGame, Card, Input, Output, Player } from "./game.js";
+import { chunk } from "../utils.js";
 
 const colour = (card: Card) => (card.suit.index % 2 ? chalk.red : chalk.white);
 
@@ -11,8 +11,6 @@ const prompt = rl.question.bind(rl);
 
 const count = parseInt(await prompt("Number of players? ")!);
 if (Number.isNaN(count) || count < 2) throw new Error("Unexpected input. Enter a valid number 2 or above.");
-
-console.log("\n");
 
 const players = Array.from(
 	{ length: count },
@@ -39,17 +37,36 @@ const buildPrompt = (player: Player, inputs: string) =>
 		inputs,
 	].join("\n\n");
 
-const printInput = (player: Player, input: Input.Any) => {
-	if (input.type === "play") console.log(player.name, "played", coloured(input.card));
-	else if (input.type === "cut") console.log(player.name, "cut with", coloured(input.card));
-	else if (input.type === "offer") console.log(input.player.name, "offered their hand to", player.name);
-	else if (input.type === "accept") console.log(player.name, "accepted", `${input.player.name}'s offer`);
-	else exhaustive(input);
-
-	console.log("\n===\n");
+const mapInput = (player: Player, input: Input.Any): string => {
+	switch (input.type) {
+		case "play":
+			return player.name + " played " + coloured(input.card);
+		case "cut":
+			return player.name + " cut with " + coloured(input.card);
+		case "offer":
+			return input.player.name + " offered their hand to " + player.name;
+		case "accept":
+			return player.name + " accepted " + `${input.player.name}'s offer`;
+	}
 };
 
+function mapOutput(output: Output.Any): string {
+	switch (output.type) {
+		case "invalid":
+			return "Invalid: " + output.msg;
+		case "winners":
+			return `${join(output.players)} ${haveHas(output.players.length)} won!`;
+		case "loser":
+			return output.player.name + " has lost.";
+	}
+}
+
+let outputCache = "";
+
 const inputController = async (player: Player, inputs: Input.Any[]) => {
+	console.log(outputCache);
+	outputCache = "";
+
 	while (true) {
 		const possibleInputs = inputs
 			.filter((input): input is Input.Play | Input.Cut => input.type === "play" || input.type === "cut")
@@ -67,7 +84,7 @@ const inputController = async (player: Player, inputs: Input.Any[]) => {
 
 		const input = inputs[res]!;
 
-		printInput(player, input);
+		console.log("\n" + mapInput(player, input) + "\n\n===");
 
 		return input;
 	}
@@ -77,7 +94,7 @@ const join = (players: Player[]) => players.map(player => player.name).join(", "
 const haveHas = (num: number) => (num > 1 ? "have" : "has");
 
 for await (const output of AceGame(players, inputController)) {
-	if (output.type === "invalid") console.log("Invalid:", output.msg);
-	else if (output.type === "winners") console.log(`${join(output.players)} ${haveHas(output.players.length)} won!`);
-	else if (output.type === "loser") console.log(`${output.player.name} has lost.`);
+	outputCache += "\n" + mapOutput(output);
 }
+
+console.log(outputCache);

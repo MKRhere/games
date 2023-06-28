@@ -2,7 +2,7 @@ import { split, reorder, shuffle, equal, exhaustive } from "../utils.js";
 import { French } from "../packs/mod.js";
 import * as Input from "./input.js";
 import * as Output from "./output.js";
-import { Player } from "./player.js";
+import type { Player } from "./player.js";
 
 export { Input, Output, Player };
 export type Card = French.Card;
@@ -87,9 +87,7 @@ export async function* AceGame(
 				if (!high || card.rank.index > high.card.rank.index) high = { index, player, card };
 
 				continue;
-			}
-
-			if (a.type === "cut") {
+			} else if (a.type === "cut") {
 				if (!high) throw new Error("No cards in pile, cannot cut!");
 				high.player.hand.push(...pile.map(p => p.card));
 
