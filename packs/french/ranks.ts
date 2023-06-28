@@ -80,6 +80,8 @@ export const Joker = {
 	index: -1,
 } as const satisfies Type;
 
+export type Joker = typeof Joker;
+
 export const All = [Two, Three, Four, Five, Six, Seven, Eight, Nine, Jack, Queen, King, Ace];
 
 export type Any = (typeof All)[number];

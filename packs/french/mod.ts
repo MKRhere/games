@@ -3,12 +3,15 @@ import * as Suits from "./suits.js";
 
 export { Ranks, Suits };
 
-export const JokerCard = {
+export interface JokerCard {
+	suit: undefined;
+	rank: Ranks.Joker;
+}
+
+export const JokerCard: JokerCard = {
 	suit: undefined,
 	rank: Ranks.Joker,
 };
-
-export type JokerCard = typeof JokerCard;
 
 export interface Card {
 	suit: Suits.Any;
@@ -22,4 +25,4 @@ export const sort = (cards: Card[]) =>
 
 export const Pack: Card[] = Suits.All.flatMap(suit => Ranks.All.map((rank): Card => ({ suit, rank })));
 
-export const PackWithJoker: (Card | JokerCard)[] = (Pack as (Card | JokerCard)[]).concat([JokerCard, JokerCard]);
+export const PackWithJoker: (Card | JokerCard)[] = [...Pack, JokerCard, JokerCard];
