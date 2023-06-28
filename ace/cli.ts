@@ -63,7 +63,7 @@ function mapOutput(output: Output.Any): string {
 
 let outputCache = "";
 
-const inputController = async (player: Player, inputs: Input.Any[]) => {
+const inputController = async (player: Player, inputs: Input.Any[]): Promise<Input.Any> => {
 	console.log(outputCache);
 	outputCache = "";
 
