@@ -1,8 +1,8 @@
-import { split, reorder, shuffle, equal, exhaustive } from "../utils.js";
-import { French } from "../packs/mod.js";
-import * as Input from "./input.js";
-import * as Output from "./output.js";
-import type { Player } from "./player.js";
+import { split, reorder, shuffle, equal, exhaustive } from "../utils.ts";
+import { French } from "../packs/mod.ts";
+import * as Input from "./input.ts";
+import * as Output from "./output.ts";
+import type { Player } from "./player.ts";
 
 export { Input, Output, Player };
 export type Card = French.Card;
@@ -28,9 +28,7 @@ export async function* AceGame(
 
 	players = reorder(players, starting);
 
-	let ended = false;
-
-	while (!ended) {
+	while (true) {
 		let suit: Card["suit"] | null = null;
 		let high: PileItem | null = null;
 		const pile: PileItem[] = [];

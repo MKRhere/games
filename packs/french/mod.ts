@@ -1,5 +1,5 @@
-import * as Ranks from "./ranks.js";
-import * as Suits from "./suits.js";
+import * as Ranks from "./ranks.ts";
+import * as Suits from "./suits.ts";
 
 export { Ranks, Suits };
 

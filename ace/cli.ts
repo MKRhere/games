@@ -1,8 +1,8 @@
 import { createInterface } from "readline/promises";
 import chalk from "chalk";
 
-import { AceGame, Card, Input, Output, Player } from "./game.js";
-import { chunk } from "../utils.js";
+import { AceGame, Card, Input, Output, Player } from "./game.ts";
+import { chunk } from "../utils.ts";
 
 const colour = (card: Card) => (card.suit.index % 2 ? chalk.red : chalk.white);
 

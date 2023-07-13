@@ -1,4 +1,4 @@
-import { French } from "../packs/mod.js";
+import { French } from "../packs/mod.ts";
 
 export interface Player {
 	id: string;

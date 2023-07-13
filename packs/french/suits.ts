@@ -1,4 +1,4 @@
-import { CardComponent as Type } from "./types.js";
+import { CardComponent as Type } from "./types.ts";
 
 export type { Type };
 

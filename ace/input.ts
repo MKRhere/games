@@ -1,5 +1,5 @@
-import { French } from "../packs/mod.js";
-import { Player } from "./player.js";
+import { French } from "../packs/mod.ts";
+import { Player } from "./player.ts";
 
 export interface Play {
 	type: "play";
