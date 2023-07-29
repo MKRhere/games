@@ -1,6 +1,6 @@
 import { Telegraf, Input } from "telegraf";
 
-const bot = new Telegraf("494365321:AAGM6_3QK_K_nmMFS8G51FI4zC5URC6SfRU");
+const bot = new Telegraf("");
 
 const stickers: Record<string, Record<string, { file: string; file_id: string }>> = {
 	red: {
